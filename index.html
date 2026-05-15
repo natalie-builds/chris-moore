@@ -164,7 +164,7 @@
       border-radius: 5px;
       padding: 6px 10px;
       font-family: Georgia, serif;
-      font-size: 0.85rem;
+      font-size: 16px;
       color: #2a2118;
       background: #fff;
       outline: none;
@@ -494,6 +494,7 @@
         });
       });
 
+      submitBtn.disabled = false;
       submitRow.style.display = 'block';
       setTimeout(() => pendingList.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
     }
