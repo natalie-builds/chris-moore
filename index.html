@@ -424,7 +424,7 @@
           ${colPhotos.map(p => {
             const rot = keyRotation(p.key, p._idx);
             return `<div class="photo-wrap" style="transform: rotate(${rot}deg)" data-caption="${(p.caption || '').replace(/"/g, '&quot;')}" data-key="${p.key}">
-              <img src="/photo/${p.key}" loading="lazy" alt="Memory of Kris" />
+              <img src="/photo/${p.key}" loading="lazy" alt="Memory of Kris" onerror="if(!this.dataset.r){this.dataset.r=1;const s=this.src;this.src='';setTimeout(()=>this.src=s,1500)}" />
               ${p.caption ? `<div class="photo-caption">${p.caption}</div>` : ''}
             </div>`;
           }).join('')}
