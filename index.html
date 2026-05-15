@@ -263,7 +263,7 @@
         return;
       }
       gallery.innerHTML = keys.map(key => {
-        const rot = (Math.random() * 6 - 3).toFixed(2);
+        const rot = (Math.random() * 14 - 7).toFixed(2);
         return `<div class="photo-wrap" style="transform: rotate(${rot}deg)">
           <img src="/photo/${key}" loading="lazy" alt="Memory of Chris" />
         </div>`;
