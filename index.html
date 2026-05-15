@@ -400,7 +400,7 @@
       const col = idx % 5;
       // Sign is column-only: guaranteed adjacent columns always alternate direction.
       // Magnitude varies per photo via hash so each tilt looks unique.
-      const sign = col % 2 === 0 ? 1 : -1;
+      const sign = col % 2 === 0 ? -1 : 1;
       return (sign * magnitude).toFixed(2);
     }
 
