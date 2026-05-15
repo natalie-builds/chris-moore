@@ -232,11 +232,29 @@
     @media (max-width: 700px) { .gallery { flex-wrap: wrap; } .gallery-col { min-width: 45%; } }
     @media (max-width: 460px) { .gallery-col { min-width: 100%; } }
 
+    .photo-delete {
+      position: absolute;
+      bottom: 2px;
+      right: 6px;
+      background: none;
+      border: none;
+      font-size: 0.62rem;
+      color: #c8b89a;
+      cursor: pointer;
+      padding: 4px;
+      font-family: Georgia, serif;
+      font-style: italic;
+      line-height: 1;
+    }
+
+    .photo-delete:hover { color: #8a7968; }
+
     .photo-wrap {
       margin-bottom: 12px;
       margin-top: 8px;
       width: 94%;
       align-self: center;
+      position: relative;
       background: #fff;
       padding: 10px 10px 14px;
       box-shadow: 3px 6px 20px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.1);
@@ -406,9 +424,10 @@
         <div class="gallery-col">
           ${colPhotos.map(p => {
             const rot = keyRotation(p.key, p._idx);
-            return `<div class="photo-wrap" style="transform: rotate(${rot}deg)" data-caption="${(p.caption || '').replace(/"/g, '&quot;')}">
+            return `<div class="photo-wrap" style="transform: rotate(${rot}deg)" data-caption="${(p.caption || '').replace(/"/g, '&quot;')}" data-key="${p.key}">
               <img src="/photo/${p.key}" loading="lazy" alt="Memory of Kris" />
               ${p.caption ? `<div class="photo-caption">${p.caption}</div>` : ''}
+              <button class="photo-delete" data-key="${p.key}">delete</button>
             </div>`;
           }).join('')}
         </div>
@@ -418,6 +437,17 @@
           lightboxImg.src = wrap.querySelector('img').src;
           lightboxCaption.textContent = wrap.dataset.caption || '';
           lightbox.classList.add('open');
+        });
+      });
+
+      gallery.querySelectorAll('.photo-delete').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (confirm('This will permanently delete this photo for everyone. Are you sure?')) {
+            fetch(`/delete?key=${encodeURIComponent(btn.dataset.key)}`, { method: 'DELETE' })
+              .then(() => loadPhotos())
+              .catch(() => alert('Something went wrong. Please try again.'));
+          }
         });
       });
     }
