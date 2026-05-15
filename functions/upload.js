@@ -3,6 +3,7 @@ export async function onRequestPost(context) {
   try {
     const formData = await request.formData();
     const file = formData.get('photo');
+    const caption = formData.get('caption') || '';
     if (!file) {
       return new Response(JSON.stringify({ error: 'No file' }), {
         status: 400, headers: { 'Content-Type': 'application/json' }
@@ -10,7 +11,8 @@ export async function onRequestPost(context) {
     }
     const key = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     await env.PHOTOS.put(key, file.stream(), {
-      httpMetadata: { contentType: file.type }
+      httpMetadata: { contentType: file.type },
+      customMetadata: { caption }
     });
     return new Response(JSON.stringify({ success: true, key }), {
       headers: { 'Content-Type': 'application/json' }

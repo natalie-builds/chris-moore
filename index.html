@@ -47,6 +47,7 @@
       line-height: 1.7;
     }
 
+    /* Upload section */
     .upload-section {
       text-align: center;
       padding: 48px 24px;
@@ -74,15 +75,9 @@
 
     .upload-area:hover { border-color: #8a7968; background: #f2ede6; }
 
-    .upload-area input[type="file"] {
-      display: none;
-    }
+    .upload-area input[type="file"] { display: none; }
 
-    .upload-icon {
-      font-size: 2rem;
-      margin-bottom: 10px;
-      color: #c8b89a;
-    }
+    .upload-icon { font-size: 2rem; margin-bottom: 10px; color: #c8b89a; }
 
     .upload-text {
       font-size: 0.9rem;
@@ -105,14 +100,63 @@
     .upload-btn:hover { background: #3d3125; }
     .upload-btn:disabled { background: #c8b89a; cursor: not-allowed; }
 
+    /* Caption input — shown after file is selected */
+    .caption-row {
+      display: none;
+      max-width: 480px;
+      margin: 16px auto 0;
+      text-align: left;
+    }
+
+    .caption-row.visible { display: block; }
+
+    .caption-row label {
+      display: block;
+      font-size: 0.8rem;
+      color: #8a7968;
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+
+    .caption-row input {
+      width: 100%;
+      border: 1px solid #d8cfc4;
+      border-radius: 6px;
+      padding: 9px 12px;
+      font-family: Georgia, serif;
+      font-size: 0.9rem;
+      color: #2a2118;
+      background: #fff;
+      outline: none;
+    }
+
+    .caption-row input:focus { border-color: #8a7968; }
+
+    .caption-submit {
+      margin-top: 10px;
+      background: #5a4a38;
+      color: #f8f5f0;
+      border: none;
+      padding: 9px 24px;
+      border-radius: 6px;
+      font-family: Georgia, serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .caption-submit:hover { background: #3d3125; }
+
     .status {
       margin-top: 14px;
       font-size: 0.85rem;
       color: #8a7968;
       font-style: italic;
       min-height: 20px;
+      text-align: center;
     }
 
+    /* Gallery */
     .gallery-section {
       max-width: 1100px;
       margin: 0 auto;
@@ -120,28 +164,26 @@
     }
 
     .gallery-section h2 {
-      font-size: 1rem;
+      font-size: 0.75rem;
       font-weight: normal;
       color: #8a7968;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      font-size: 0.75rem;
       margin-bottom: 28px;
       text-align: center;
     }
 
     .gallery {
       display: flex;
-      gap: 32px;
+      gap: 8px;
       align-items: flex-start;
-      padding: 20px 8px;
+      padding: 24px 8px;
     }
 
     .gallery-col {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 0;
       overflow: visible;
     }
 
@@ -149,25 +191,43 @@
     @media (max-width: 460px) { .gallery-col { min-width: 100%; } }
 
     .photo-wrap {
-      margin-bottom: 48px;
+      margin-bottom: 24px;
       margin-top: 16px;
-      width: 90%;
+      width: 92%;
       align-self: center;
       background: #fff;
-      padding: 12px 12px 40px;
+      padding: 10px 10px 36px;
       box-shadow: 3px 6px 20px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.1);
       cursor: pointer;
-      transition: box-shadow 0.2s;
+      transition: box-shadow 0.2s, transform 0.2s;
       border: 1px solid #e8e0d8;
+      position: relative;
     }
 
     .photo-wrap:hover {
-      box-shadow: 4px 8px 28px rgba(0,0,0,0.2), 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 6px 10px 32px rgba(0,0,0,0.22);
+      z-index: 10;
     }
 
     .photo-wrap img {
       width: 100%;
       display: block;
+    }
+
+    .photo-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 6px 10px 10px;
+      font-size: 0.78rem;
+      color: #8a7968;
+      font-style: italic;
+      text-align: center;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .empty {
@@ -176,7 +236,7 @@
       font-style: italic;
       font-size: 0.95rem;
       padding: 40px 0;
-      grid-column: 1 / -1;
+      width: 100%;
     }
 
     /* Lightbox */
@@ -184,10 +244,11 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.88);
       z-index: 100;
       align-items: center;
       justify-content: center;
+      flex-direction: column;
       padding: 24px;
     }
 
@@ -195,9 +256,17 @@
 
     .lightbox img {
       max-width: 90vw;
-      max-height: 90vh;
+      max-height: 80vh;
       object-fit: contain;
       border-radius: 4px;
+    }
+
+    .lightbox-caption {
+      color: #ccc;
+      font-style: italic;
+      font-size: 0.9rem;
+      margin-top: 16px;
+      text-align: center;
     }
 
     .lightbox-close {
@@ -225,11 +294,16 @@
   <div class="upload-section">
     <h2>Add a photo</h2>
     <label class="upload-area" id="dropzone">
-      <input type="file" id="fileInput" accept="image/*" multiple />
+      <input type="file" id="fileInput" accept="image/*" />
       <div class="upload-icon">☁</div>
-      <div class="upload-text">Click to choose photos, or drag and drop here.<br>Any device, any format.</div>
-      <button class="upload-btn" id="uploadBtn" type="button">Choose Photos</button>
+      <div class="upload-text">Click to choose a photo, or drag and drop here.<br>Any device, any format.</div>
+      <button class="upload-btn" id="uploadBtn" type="button">Choose Photo</button>
     </label>
+    <div class="caption-row" id="captionRow">
+      <label for="captionInput">Add a caption (optional) — when was this taken, what's the memory?</label>
+      <input type="text" id="captionInput" placeholder="e.g. Christmas 2019, at the lake house" maxlength="120" />
+      <button class="caption-submit" id="submitBtn">Upload</button>
+    </div>
     <div class="status" id="status"></div>
   </div>
 
@@ -243,43 +317,48 @@
   <div class="lightbox" id="lightbox">
     <span class="lightbox-close" id="lightboxClose">&times;</span>
     <img id="lightboxImg" src="" alt="" />
+    <div class="lightbox-caption" id="lightboxCaption"></div>
   </div>
 
   <script>
     const fileInput = document.getElementById('fileInput');
     const uploadBtn = document.getElementById('uploadBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const captionRow = document.getElementById('captionRow');
+    const captionInput = document.getElementById('captionInput');
     const dropzone = document.getElementById('dropzone');
     const status = document.getElementById('status');
     const gallery = document.getElementById('gallery');
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
 
-    // Load photos on page load
+    let pendingFile = null;
+
     loadPhotos();
 
     async function loadPhotos() {
       try {
         const res = await fetch('/photos');
-        const keys = await res.json();
-        renderGallery(keys);
-      } catch (e) {
-        // Silent fail — backend may not be connected yet
-      }
+        const photos = await res.json();
+        renderGallery(photos);
+      } catch (e) {}
     }
 
-    function renderGallery(keys) {
-      if (!keys.length) {
+    function renderGallery(photos) {
+      if (!photos.length) {
         gallery.innerHTML = '<div class="empty">Photos shared by family and friends will appear here.</div>';
         return;
       }
       const cols = [[], [], []];
-      keys.forEach((key, i) => cols[i % 3].push(key));
-      gallery.innerHTML = cols.map(colKeys => `
+      photos.forEach((p, i) => cols[i % 3].push(p));
+      gallery.innerHTML = cols.map(colPhotos => `
         <div class="gallery-col">
-          ${colKeys.map(key => {
-            const rot = (Math.random() * 14 - 7).toFixed(2);
-            return `<div class="photo-wrap" style="transform: rotate(${rot}deg)">
-              <img src="/photo/${key}" loading="lazy" alt="Memory of Chris" />
+          ${colPhotos.map(p => {
+            const rot = (Math.random() * 10 - 5).toFixed(2);
+            return `<div class="photo-wrap" style="transform: rotate(${rot}deg)" data-caption="${(p.caption || '').replace(/"/g, '&quot;')}">
+              <img src="/photo/${p.key}" loading="lazy" alt="Memory of Chris" />
+              ${p.caption ? `<div class="photo-caption">${p.caption}</div>` : ''}
             </div>`;
           }).join('')}
         </div>
@@ -287,19 +366,22 @@
       gallery.querySelectorAll('.photo-wrap').forEach(wrap => {
         wrap.addEventListener('click', () => {
           lightboxImg.src = wrap.querySelector('img').src;
+          lightboxCaption.textContent = wrap.dataset.caption || '';
           lightbox.classList.add('open');
         });
       });
     }
 
-    // Upload
-    uploadBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      fileInput.click();
-    });
+    // File selection — show caption field
+    uploadBtn.addEventListener('click', (e) => { e.preventDefault(); fileInput.click(); });
 
     fileInput.addEventListener('change', () => {
-      if (fileInput.files.length) uploadFiles(fileInput.files);
+      if (fileInput.files[0]) {
+        pendingFile = fileInput.files[0];
+        captionRow.classList.add('visible');
+        captionInput.focus();
+        status.textContent = '';
+      }
     });
 
     dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.background = '#ede8e0'; });
@@ -307,32 +389,36 @@
     dropzone.addEventListener('drop', (e) => {
       e.preventDefault();
       dropzone.style.background = '';
-      if (e.dataTransfer.files.length) uploadFiles(e.dataTransfer.files);
+      if (e.dataTransfer.files[0]) {
+        pendingFile = e.dataTransfer.files[0];
+        captionRow.classList.add('visible');
+        captionInput.focus();
+      }
     });
 
-    async function uploadFiles(files) {
-      uploadBtn.disabled = true;
-      const total = files.length;
-      let done = 0;
+    // Submit upload
+    submitBtn.addEventListener('click', doUpload);
+    captionInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') doUpload(); });
 
-      for (const file of files) {
-        status.textContent = `Uploading ${done + 1} of ${total}...`;
-        const form = new FormData();
-        form.append('photo', file);
-        try {
-          await fetch('/upload', { method: 'POST', body: form });
-          done++;
-        } catch (e) {
-          status.textContent = 'Something went wrong. Please try again.';
-          uploadBtn.disabled = false;
-          return;
-        }
+    async function doUpload() {
+      if (!pendingFile) return;
+      submitBtn.disabled = true;
+      status.textContent = 'Uploading...';
+      const form = new FormData();
+      form.append('photo', pendingFile);
+      form.append('caption', captionInput.value.trim());
+      try {
+        await fetch('/upload', { method: 'POST', body: form });
+        status.textContent = 'Photo uploaded. Thank you.';
+        captionRow.classList.remove('visible');
+        captionInput.value = '';
+        fileInput.value = '';
+        pendingFile = null;
+        loadPhotos();
+      } catch (e) {
+        status.textContent = 'Something went wrong. Please try again.';
       }
-
-      status.textContent = `${total} photo${total > 1 ? 's' : ''} uploaded. Thank you.`;
-      uploadBtn.disabled = false;
-      fileInput.value = '';
-      loadPhotos();
+      submitBtn.disabled = false;
     }
 
     // Lightbox
@@ -342,4 +428,3 @@
 
 </body>
 </html>
-
