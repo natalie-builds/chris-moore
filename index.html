@@ -66,45 +66,52 @@
     /* Upload section */
     .upload-section {
       text-align: center;
-      padding: 20px 24px;
+      padding: 16px 24px 20px;
       border-bottom: 1px solid #e5ddd4;
     }
 
     .upload-area {
-      display: inline-flex;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       cursor: pointer;
+      border: 1.5px dashed #c8b89a;
+      border-radius: 10px;
+      padding: 18px 24px 20px;
+      max-width: 380px;
+      margin: 10px auto 0;
     }
 
     .upload-area input[type="file"] { display: none; }
 
     .upload-icon {
-      font-size: 1.3rem;
+      font-size: 1.6rem;
       color: #a09080;
+      line-height: 1;
     }
 
     .upload-text {
-      font-size: 0.8rem;
-      color: #a09080;
-      font-style: italic;
-      line-height: 1.5;
-      text-align: left;
+      font-size: 0.83rem;
+      color: #6a5d50;
+      line-height: 1.55;
+      text-align: center;
     }
 
     .upload-btn {
-      background: #5a4a38;
+      background: #3d3125;
       color: #f8f5f0;
       border: none;
-      padding: 9px 22px;
-      border-radius: 6px;
+      padding: 10px 36px;
+      border-radius: 8px;
       font-family: Georgia, serif;
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       cursor: pointer;
       transition: background 0.2s;
+      margin-top: 4px;
     }
 
-    .upload-btn:hover { background: #3d3125; }
+    .upload-btn:hover { background: #2a2018; }
     .upload-btn:disabled { background: #c8b89a; cursor: not-allowed; }
 
     /* Pending photos list */
@@ -326,7 +333,7 @@
   </header>
 
   <div class="upload-section">
-    <h2>Add photos</h2>
+    <h2>Add photos and caption</h2>
     <div class="upload-area" id="dropzone">
       <input type="file" id="fileInput" accept="image/*" multiple />
       <div class="upload-icon">☁</div>
