@@ -16,7 +16,7 @@
 
     header {
       text-align: center;
-      padding: 48px 24px 24px;
+      padding: 40px 24px 14px;
     }
 
     .celebrating {
@@ -196,7 +196,7 @@
 
     /* Gallery */
     .gallery-section {
-      padding: 28px 16px 60px;
+      padding: 16px 16px 60px;
     }
 
     .gallery-section h2 {
@@ -205,7 +205,7 @@
       color: #8a7968;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      margin-bottom: 16px;
+      margin-bottom: 8px;
       text-align: center;
     }
 
@@ -372,10 +372,15 @@
       } catch (e) {}
     }
 
-    function keyRotation(key) {
+    function keyRotation(key, idx) {
       let h = 0;
       for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) & 0xffffffff;
-      return (((h >>> 0) % 1200) / 100 - 6).toFixed(2);
+      const magnitude = ((h >>> 0) % 500) / 100 + 1.5; // 1.5–6.4 degrees
+      const col = idx % 5;
+      // XOR hash parity with column parity: each row randomly starts + or -,
+      // but always alternates across columns so no two side-by-side photos tilt the same way
+      const sign = (((h >>> 0) % 2) ^ (col % 2)) === 0 ? 1 : -1;
+      return (sign * magnitude).toFixed(2);
     }
 
     function renderGallery(photos) {
@@ -384,11 +389,11 @@
         return;
       }
       const cols = [[], [], [], [], []];
-      photos.forEach((p, i) => cols[i % 5].push(p));
+      photos.forEach((p, i) => cols[i % 5].push({ ...p, _idx: i }));
       gallery.innerHTML = cols.map(colPhotos => `
         <div class="gallery-col">
           ${colPhotos.map(p => {
-            const rot = keyRotation(p.key);
+            const rot = keyRotation(p.key, p._idx);
             return `<div class="photo-wrap" style="transform: rotate(${rot}deg)" data-caption="${(p.caption || '').replace(/"/g, '&quot;')}">
               <img src="/photo/${p.key}" loading="lazy" alt="Memory of Chris" />
               ${p.caption ? `<div class="photo-caption">${p.caption}</div>` : ''}
