@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>In Memory of Chris Moore</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #f8f5f0;
+      color: #2a2118;
+      font-family: Georgia, serif;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 64px 24px 48px;
+      border-bottom: 1px solid #e5ddd4;
+    }
+
+    .portrait {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center top;
+      margin-bottom: 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: normal;
+      letter-spacing: 0.02em;
+      color: #1a150f;
+      margin-bottom: 12px;
+    }
+
+    header p {
+      font-size: 1rem;
+      color: #8a7968;
+      font-style: italic;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .upload-section {
+      text-align: center;
+      padding: 48px 24px;
+      border-bottom: 1px solid #e5ddd4;
+    }
+
+    .upload-section h2 {
+      font-size: 1.1rem;
+      font-weight: normal;
+      color: #5a4a38;
+      margin-bottom: 20px;
+      letter-spacing: 0.03em;
+    }
+
+    .upload-area {
+      display: inline-block;
+      border: 2px dashed #c8b89a;
+      border-radius: 12px;
+      padding: 32px 48px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .upload-area:hover { border-color: #8a7968; background: #f2ede6; }
+
+    .upload-area input[type="file"] {
+      display: none;
+    }
+
+    .upload-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #c8b89a;
+    }
+
+    .upload-text {
+      font-size: 0.9rem;
+      color: #8a7968;
+      margin-bottom: 16px;
+    }
+
+    .upload-btn {
+      background: #5a4a38;
+      color: #f8f5f0;
+      border: none;
+      padding: 10px 28px;
+      border-radius: 6px;
+      font-family: Georgia, serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .upload-btn:hover { background: #3d3125; }
+    .upload-btn:disabled { background: #c8b89a; cursor: not-allowed; }
+
+    .status {
+      margin-top: 14px;
+      font-size: 0.85rem;
+      color: #8a7968;
+      font-style: italic;
+      min-height: 20px;
+    }
+
+    .gallery-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .gallery-section h2 {
+      font-size: 1rem;
+      font-weight: normal;
+      color: #8a7968;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .gallery img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.14);
+    }
+
+    .empty {
+      text-align: center;
+      color: #c8b89a;
+      font-style: italic;
+      font-size: 0.95rem;
+      padding: 40px 0;
+      grid-column: 1 / -1;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.7;
+    }
+
+    .lightbox-close:hover { opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img class="portrait" src="chris.png" alt="Chris Moore" />
+    <h1>Chris Moore</h1>
+    <p>Share your photos and memories of Chris — every picture is a gift to the family.</p>
+  </header>
+
+  <div class="upload-section">
+    <h2>Add a photo</h2>
+    <label class="upload-area" id="dropzone">
+      <input type="file" id="fileInput" accept="image/*" multiple />
+      <div class="upload-icon">☁</div>
+      <div class="upload-text">Click to choose photos, or drag and drop here.<br>Any device, any format.</div>
+      <button class="upload-btn" id="uploadBtn" type="button">Choose Photos</button>
+    </label>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="gallery-section">
+    <h2>Photos</h2>
+    <div class="gallery" id="gallery">
+      <div class="empty">Photos shared by family and friends will appear here.</div>
+    </div>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" id="lightboxClose">&times;</span>
+    <img id="lightboxImg" src="" alt="" />
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const dropzone = document.getElementById('dropzone');
+    const status = document.getElementById('status');
+    const gallery = document.getElementById('gallery');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+
+    // Load photos on page load
+    loadPhotos();
+
+    async function loadPhotos() {
+      try {
+        const res = await fetch('/photos');
+        const keys = await res.json();
+        renderGallery(keys);
+      } catch (e) {
+        // Silent fail — backend may not be connected yet
+      }
+    }
+
+    function renderGallery(keys) {
+      if (!keys.length) {
+        gallery.innerHTML = '<div class="empty">Photos shared by family and friends will appear here.</div>';
+        return;
+      }
+      gallery.innerHTML = keys.map(key =>
+        `<img src="/photo/${key}" loading="lazy" alt="Memory of Chris" />`
+      ).join('');
+      gallery.querySelectorAll('img').forEach(img => {
+        img.addEventListener('click', () => {
+          lightboxImg.src = img.src;
+          lightbox.classList.add('open');
+        });
+      });
+    }
+
+    // Upload
+    uploadBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length) uploadFiles(fileInput.files);
+    });
+
+    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.background = '#ede8e0'; });
+    dropzone.addEventListener('dragleave', () => { dropzone.style.background = ''; });
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.style.background = '';
+      if (e.dataTransfer.files.length) uploadFiles(e.dataTransfer.files);
+    });
+
+    async function uploadFiles(files) {
+      uploadBtn.disabled = true;
+      const total = files.length;
+      let done = 0;
+
+      for (const file of files) {
+        status.textContent = `Uploading ${done + 1} of ${total}...`;
+        const form = new FormData();
+        form.append('photo', file);
+        try {
+          await fetch('/upload', { method: 'POST', body: form });
+          done++;
+        } catch (e) {
+          status.textContent = 'Something went wrong. Please try again.';
+          uploadBtn.disabled = false;
+          return;
+        }
+      }
+
+      status.textContent = `${total} photo${total > 1 ? 's' : ''} uploaded. Thank you.`;
+      uploadBtn.disabled = false;
+      fileInput.value = '';
+      loadPhotos();
+    }
+
+    // Lightbox
+    document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('open'));
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) lightbox.classList.remove('open'); });
+  </script>
+
+</body>
+</html>
