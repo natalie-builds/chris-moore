@@ -93,15 +93,12 @@
       font-style: italic;
     }
 
-    /* Caption input — shown after file is selected */
+    /* Caption input */
     .caption-row {
-      display: none;
       max-width: 480px;
       margin: 16px auto 0;
       text-align: left;
     }
-
-    .caption-row.visible { display: block; }
 
     .caption-row label {
       display: block;
@@ -287,15 +284,15 @@
 
   <div class="upload-section">
     <h2>Add a photo</h2>
-    <label class="upload-area" id="dropzone">
+    <div class="upload-area" id="dropzone">
       <input type="file" id="fileInput" accept="image/*" />
       <button class="upload-btn" id="uploadBtn" type="button">Choose Photo</button>
       <span class="upload-hint">or drag and drop · any device, any format</span>
-    </label>
+    </div>
     <div class="caption-row" id="captionRow">
       <label for="captionInput">Add a caption (optional) — when was this taken, what's the memory?</label>
       <input type="text" id="captionInput" placeholder="e.g. Christmas 2019, at the lake house" maxlength="120" />
-      <button class="caption-submit" id="submitBtn">Upload</button>
+      <button class="caption-submit" id="submitBtn" disabled>Upload</button>
     </div>
     <div class="status" id="status"></div>
   </div>
@@ -365,13 +362,13 @@
       });
     }
 
-    // File selection — show caption field
-    uploadBtn.addEventListener('click', (e) => { e.preventDefault(); fileInput.click(); });
+    // File selection
+    uploadBtn.addEventListener('click', () => fileInput.click());
 
     fileInput.addEventListener('change', () => {
       if (fileInput.files[0]) {
         pendingFile = fileInput.files[0];
-        captionRow.classList.add('visible');
+        submitBtn.disabled = false;
         captionInput.focus();
         status.textContent = '';
       }
@@ -403,10 +400,10 @@
       try {
         await fetch('/upload', { method: 'POST', body: form });
         status.textContent = 'Photo uploaded. Thank you.';
-        captionRow.classList.remove('visible');
         captionInput.value = '';
         fileInput.value = '';
         pendingFile = null;
+        submitBtn.disabled = true;
         loadPhotos();
       } catch (e) {
         status.textContent = 'Something went wrong. Please try again.';
