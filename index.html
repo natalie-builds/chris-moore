@@ -329,7 +329,7 @@
           <polyline points="21 15 16 10 5 21"/>
         </svg>
       </div>
-      <div class="upload-text">Click to choose photos, or drag and drop. Add captions.</div>
+      <div class="upload-text" id="uploadText">Click to choose photos, or drag and drop. Add captions.</div>
       <button class="upload-btn" id="uploadBtn" type="button">Choose Photos</button>
     </div>
     <div class="pending-list" id="pendingList"></div>
@@ -439,12 +439,18 @@
       renderPendingList();
     });
 
+    const uploadText = document.getElementById('uploadText');
+    const uploadTextDefault = 'Click to choose photos, or drag and drop. Add captions.';
+
     function renderPendingList() {
       if (!pendingFiles.length) {
         pendingList.innerHTML = '';
         submitRow.style.display = 'none';
+        uploadText.textContent = uploadTextDefault;
         return;
       }
+      const n = pendingFiles.length;
+      uploadText.textContent = `${n} photo${n > 1 ? 's' : ''} selected — add captions below, then tap Upload.`;
       pendingList.innerHTML = pendingFiles.map((item, i) => `
         <div class="pending-item">
           <img class="pending-thumb" src="${item.url}" alt="" />
@@ -473,6 +479,7 @@
       });
 
       submitRow.style.display = 'block';
+      setTimeout(() => pendingList.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
     }
 
     // Submit upload
@@ -495,6 +502,7 @@
         pendingList.innerHTML = '';
         fileInput.value = '';
         submitRow.style.display = 'none';
+        uploadText.textContent = uploadTextDefault;
         status.textContent = `${total} photo${total > 1 ? 's' : ''} uploaded. Thank you.`;
         loadPhotos();
       } catch (e) {
