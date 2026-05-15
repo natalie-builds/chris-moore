@@ -131,21 +131,28 @@
     }
 
     .gallery {
-      columns: 3;
-      column-gap: 40px;
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      padding: 20px 8px;
+    }
+
+    .gallery-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
       overflow: visible;
     }
 
-    @media (max-width: 700px) { .gallery { columns: 2; } }
-    @media (max-width: 460px) { .gallery { columns: 1; } }
+    @media (max-width: 700px) { .gallery { flex-wrap: wrap; } .gallery-col { min-width: 45%; } }
+    @media (max-width: 460px) { .gallery-col { min-width: 100%; } }
 
     .photo-wrap {
-      break-inside: avoid;
       margin-bottom: 48px;
       margin-top: 16px;
-      display: inline-block;
-      width: 88%;
-      margin-left: 6%;
+      width: 90%;
+      align-self: center;
       background: #fff;
       padding: 12px 12px 40px;
       box-shadow: 3px 6px 20px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.1);
@@ -265,12 +272,18 @@
         gallery.innerHTML = '<div class="empty">Photos shared by family and friends will appear here.</div>';
         return;
       }
-      gallery.innerHTML = keys.map(key => {
-        const rot = (Math.random() * 14 - 7).toFixed(2);
-        return `<div class="photo-wrap" style="transform: rotate(${rot}deg)">
-          <img src="/photo/${key}" loading="lazy" alt="Memory of Chris" />
-        </div>`;
-      }).join('');
+      const cols = [[], [], []];
+      keys.forEach((key, i) => cols[i % 3].push(key));
+      gallery.innerHTML = cols.map(colKeys => `
+        <div class="gallery-col">
+          ${colKeys.map(key => {
+            const rot = (Math.random() * 14 - 7).toFixed(2);
+            return `<div class="photo-wrap" style="transform: rotate(${rot}deg)">
+              <img src="/photo/${key}" loading="lazy" alt="Memory of Chris" />
+            </div>`;
+          }).join('')}
+        </div>
+      `).join('');
       gallery.querySelectorAll('.photo-wrap').forEach(wrap => {
         wrap.addEventListener('click', () => {
           lightboxImg.src = wrap.querySelector('img').src;
