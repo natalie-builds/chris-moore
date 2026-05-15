@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>In Memory of Chris Moore</title>
+  <title>In Memory of Kris Moore</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -321,9 +321,9 @@
 
   <header>
     <p class="celebrating">Celebrating the life of</p>
-    <img class="portrait" src="chris.png" alt="Chris Moore" />
-    <h1>Chris Moore</h1>
-    <p>Share your memories of Chris — every picture is a gift to the family.</p>
+    <img class="portrait" src="chris.png" alt="Kris Moore" />
+    <h1>Kris Moore</h1>
+    <p>Share your memories of Kris — every picture is a gift to the family.</p>
   </header>
 
   <div class="upload-section">
@@ -407,7 +407,7 @@
           ${colPhotos.map(p => {
             const rot = keyRotation(p.key, p._idx);
             return `<div class="photo-wrap" style="transform: rotate(${rot}deg)" data-caption="${(p.caption || '').replace(/"/g, '&quot;')}">
-              <img src="/photo/${p.key}" loading="lazy" alt="Memory of Chris" />
+              <img src="/photo/${p.key}" loading="lazy" alt="Memory of Kris" />
               ${p.caption ? `<div class="photo-caption">${p.caption}</div>` : ''}
             </div>`;
           }).join('')}
