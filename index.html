@@ -93,37 +93,71 @@
       font-style: italic;
     }
 
-    /* Caption input */
-    .caption-row {
-      max-width: 480px;
+    /* Pending photos list */
+    .pending-list {
+      max-width: 520px;
       margin: 16px auto 0;
+    }
+
+    .pending-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid #ede8e0;
       text-align: left;
     }
 
-    .caption-row label {
-      display: block;
-      font-size: 0.8rem;
-      color: #8a7968;
-      margin-bottom: 6px;
-      font-style: italic;
+    .pending-thumb {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex-shrink: 0;
     }
 
-    .caption-row input {
+    .pending-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .pending-name {
+      font-size: 0.72rem;
+      color: #a09080;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .pending-caption-input {
       width: 100%;
       border: 1px solid #d8cfc4;
-      border-radius: 6px;
-      padding: 9px 12px;
+      border-radius: 5px;
+      padding: 6px 10px;
       font-family: Georgia, serif;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #2a2118;
       background: #fff;
       outline: none;
     }
 
-    .caption-row input:focus { border-color: #8a7968; }
+    .pending-caption-input:focus { border-color: #8a7968; }
+
+    .pending-remove {
+      background: none;
+      border: none;
+      color: #c8b89a;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 4px 6px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .pending-remove:hover { color: #8a7968; }
 
     .caption-submit {
-      margin-top: 10px;
       background: #5a4a38;
       color: #f8f5f0;
       border: none;
@@ -136,6 +170,7 @@
     }
 
     .caption-submit:hover { background: #3d3125; }
+    .caption-submit:disabled { background: #c8b89a; cursor: not-allowed; }
 
     .status {
       margin-top: 14px;
@@ -283,16 +318,15 @@
   </header>
 
   <div class="upload-section">
-    <h2>Add a photo</h2>
+    <h2>Add photos</h2>
     <div class="upload-area" id="dropzone">
-      <input type="file" id="fileInput" accept="image/*" />
-      <button class="upload-btn" id="uploadBtn" type="button">Choose Photo</button>
-      <span class="upload-hint">or drag and drop · any device, any format</span>
+      <input type="file" id="fileInput" accept="image/*" multiple />
+      <button class="upload-btn" id="uploadBtn" type="button">Choose Photos</button>
+      <span class="upload-hint">select one or more · any device, any format</span>
     </div>
-    <div class="caption-row" id="captionRow">
-      <label for="captionInput">Add a caption (optional) — when was this taken, what's the memory?</label>
-      <input type="text" id="captionInput" placeholder="e.g. Christmas 2019, at the lake house" maxlength="120" />
-      <button class="caption-submit" id="submitBtn" disabled>Upload</button>
+    <div class="pending-list" id="pendingList"></div>
+    <div id="submitRow" style="display:none; margin-top:14px;">
+      <button class="caption-submit" id="submitBtn">Upload</button>
     </div>
     <div class="status" id="status"></div>
   </div>
@@ -314,8 +348,8 @@
     const fileInput = document.getElementById('fileInput');
     const uploadBtn = document.getElementById('uploadBtn');
     const submitBtn = document.getElementById('submitBtn');
-    const captionRow = document.getElementById('captionRow');
-    const captionInput = document.getElementById('captionInput');
+    const submitRow = document.getElementById('submitRow');
+    const pendingList = document.getElementById('pendingList');
     const dropzone = document.getElementById('dropzone');
     const status = document.getElementById('status');
     const gallery = document.getElementById('gallery');
@@ -323,7 +357,7 @@
     const lightboxImg = document.getElementById('lightboxImg');
     const lightboxCaption = document.getElementById('lightboxCaption');
 
-    let pendingFile = null;
+    let pendingFiles = [];
 
     loadPhotos();
 
@@ -366,12 +400,12 @@
     uploadBtn.addEventListener('click', () => fileInput.click());
 
     fileInput.addEventListener('change', () => {
-      if (fileInput.files[0]) {
-        pendingFile = fileInput.files[0];
-        submitBtn.disabled = false;
-        captionInput.focus();
-        status.textContent = '';
-      }
+      const files = Array.from(fileInput.files);
+      if (!files.length) return;
+      pendingFiles.forEach(item => URL.revokeObjectURL(item.url));
+      pendingFiles = files.map(f => ({ file: f, caption: '', url: URL.createObjectURL(f) }));
+      renderPendingList();
+      status.textContent = '';
     });
 
     dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.background = '#ede8e0'; });
@@ -379,36 +413,75 @@
     dropzone.addEventListener('drop', (e) => {
       e.preventDefault();
       dropzone.style.background = '';
-      if (e.dataTransfer.files[0]) {
-        pendingFile = e.dataTransfer.files[0];
-        captionRow.classList.add('visible');
-        captionInput.focus();
-      }
+      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+      if (!files.length) return;
+      pendingFiles.forEach(item => URL.revokeObjectURL(item.url));
+      pendingFiles = files.map(f => ({ file: f, caption: '', url: URL.createObjectURL(f) }));
+      renderPendingList();
     });
+
+    function renderPendingList() {
+      if (!pendingFiles.length) {
+        pendingList.innerHTML = '';
+        submitRow.style.display = 'none';
+        return;
+      }
+      pendingList.innerHTML = pendingFiles.map((item, i) => `
+        <div class="pending-item">
+          <img class="pending-thumb" src="${item.url}" alt="" />
+          <div class="pending-details">
+            <div class="pending-name">${item.file.name}</div>
+            <input class="pending-caption-input" type="text" placeholder="Add a caption (optional)" maxlength="120" data-index="${i}" />
+          </div>
+          <button class="pending-remove" data-index="${i}">✕</button>
+        </div>
+      `).join('');
+
+      pendingList.querySelectorAll('.pending-caption-input').forEach(input => {
+        input.addEventListener('input', () => {
+          pendingFiles[parseInt(input.dataset.index)].caption = input.value;
+        });
+      });
+
+      pendingList.querySelectorAll('.pending-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const i = parseInt(btn.dataset.index);
+          URL.revokeObjectURL(pendingFiles[i].url);
+          pendingFiles.splice(i, 1);
+          if (!pendingFiles.length) fileInput.value = '';
+          renderPendingList();
+        });
+      });
+
+      submitRow.style.display = 'block';
+    }
 
     // Submit upload
     submitBtn.addEventListener('click', doUpload);
-    captionInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') doUpload(); });
 
     async function doUpload() {
-      if (!pendingFile) return;
+      if (!pendingFiles.length) return;
       submitBtn.disabled = true;
-      status.textContent = 'Uploading...';
-      const form = new FormData();
-      form.append('photo', pendingFile);
-      form.append('caption', captionInput.value.trim());
+      const total = pendingFiles.length;
       try {
-        await fetch('/upload', { method: 'POST', body: form });
-        status.textContent = 'Photo uploaded. Thank you.';
-        captionInput.value = '';
+        for (let i = 0; i < pendingFiles.length; i++) {
+          status.textContent = total > 1 ? `Uploading ${i + 1} of ${total}...` : 'Uploading...';
+          const form = new FormData();
+          form.append('photo', pendingFiles[i].file);
+          form.append('caption', pendingFiles[i].caption.trim());
+          await fetch('/upload', { method: 'POST', body: form });
+        }
+        pendingFiles.forEach(item => URL.revokeObjectURL(item.url));
+        pendingFiles = [];
+        pendingList.innerHTML = '';
         fileInput.value = '';
-        pendingFile = null;
-        submitBtn.disabled = true;
+        submitRow.style.display = 'none';
+        status.textContent = `${total} photo${total > 1 ? 's' : ''} uploaded. Thank you.`;
         loadPhotos();
       } catch (e) {
         status.textContent = 'Something went wrong. Please try again.';
+        submitBtn.disabled = false;
       }
-      submitBtn.disabled = false;
     }
 
     // Lightbox
