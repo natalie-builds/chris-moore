@@ -16,8 +16,17 @@
 
     header {
       text-align: center;
-      padding: 64px 24px 48px;
+      padding: 48px 24px 40px;
       border-bottom: 1px solid #e5ddd4;
+    }
+
+    .celebrating {
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #a09080;
+      margin-bottom: 20px;
+      font-style: normal;
     }
 
     .portrait {
@@ -50,55 +59,39 @@
     /* Upload section */
     .upload-section {
       text-align: center;
-      padding: 48px 24px;
+      padding: 20px 24px;
       border-bottom: 1px solid #e5ddd4;
     }
 
-    .upload-section h2 {
-      font-size: 1.1rem;
-      font-weight: normal;
-      color: #5a4a38;
-      margin-bottom: 20px;
-      letter-spacing: 0.03em;
-    }
-
     .upload-area {
-      display: inline-block;
-      border: 2px dashed #c8b89a;
-      border-radius: 12px;
-      padding: 32px 48px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
       cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      max-width: 480px;
-      width: 100%;
     }
-
-    .upload-area:hover { border-color: #8a7968; background: #f2ede6; }
 
     .upload-area input[type="file"] { display: none; }
-
-    .upload-icon { font-size: 2rem; margin-bottom: 10px; color: #c8b89a; }
-
-    .upload-text {
-      font-size: 0.9rem;
-      color: #8a7968;
-      margin-bottom: 16px;
-    }
 
     .upload-btn {
       background: #5a4a38;
       color: #f8f5f0;
       border: none;
-      padding: 10px 28px;
+      padding: 9px 22px;
       border-radius: 6px;
       font-family: Georgia, serif;
-      font-size: 0.9rem;
+      font-size: 0.875rem;
       cursor: pointer;
       transition: background 0.2s;
     }
 
     .upload-btn:hover { background: #3d3125; }
     .upload-btn:disabled { background: #c8b89a; cursor: not-allowed; }
+
+    .upload-hint {
+      font-size: 0.8rem;
+      color: #a09080;
+      font-style: italic;
+    }
 
     /* Caption input — shown after file is selected */
     .caption-row {
@@ -286,18 +279,18 @@
 <body>
 
   <header>
+    <p class="celebrating">Celebrating the life of</p>
     <img class="portrait" src="chris.png" alt="Chris Moore" />
     <h1>Chris Moore</h1>
-    <p>Share your photos and memories of Chris — every picture is a gift to the family.</p>
+    <p>Share your memories of Chris — every picture is a gift to the family.</p>
   </header>
 
   <div class="upload-section">
     <h2>Add a photo</h2>
     <label class="upload-area" id="dropzone">
       <input type="file" id="fileInput" accept="image/*" />
-      <div class="upload-icon">☁</div>
-      <div class="upload-text">Click to choose a photo, or drag and drop here.<br>Any device, any format.</div>
       <button class="upload-btn" id="uploadBtn" type="button">Choose Photo</button>
+      <span class="upload-hint">or drag and drop · any device, any format</span>
     </label>
     <div class="caption-row" id="captionRow">
       <label for="captionInput">Add a caption (optional) — when was this taken, what's the memory?</label>
@@ -350,12 +343,12 @@
         gallery.innerHTML = '<div class="empty">Photos shared by family and friends will appear here.</div>';
         return;
       }
-      const cols = [[], [], []];
-      photos.forEach((p, i) => cols[i % 3].push(p));
+      const cols = [[], [], [], [], []];
+      photos.forEach((p, i) => cols[i % 5].push(p));
       gallery.innerHTML = cols.map(colPhotos => `
         <div class="gallery-col">
           ${colPhotos.map(p => {
-            const rot = (Math.random() * 10 - 5).toFixed(2);
+            const rot = (Math.random() * 14 - 7).toFixed(2);
             return `<div class="photo-wrap" style="transform: rotate(${rot}deg)" data-caption="${(p.caption || '').replace(/"/g, '&quot;')}">
               <img src="/photo/${p.key}" loading="lazy" alt="Memory of Chris" />
               ${p.caption ? `<div class="photo-caption">${p.caption}</div>` : ''}
