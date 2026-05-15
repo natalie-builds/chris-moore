@@ -232,24 +232,23 @@
     @media (max-width: 700px) { .gallery { flex-wrap: wrap; } .gallery-col { min-width: 45%; } }
     @media (max-width: 460px) { .gallery-col { min-width: 100%; } }
 
-    .photo-delete {
-      position: absolute;
-      bottom: 2px;
-      right: 6px;
+    .lightbox-delete {
       background: none;
-      border: none;
-      font-size: 0.62rem;
-      color: #c8b89a;
-      cursor: pointer;
-      padding: 4px;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.55);
       font-family: Georgia, serif;
       font-style: italic;
-      line-height: 1;
+      font-size: 0.8rem;
+      padding: 5px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: color 0.2s, border-color 0.2s;
     }
 
-    .photo-delete:hover { color: #8a7968; }
+    .lightbox-delete:hover { color: #fff; border-color: rgba(255,255,255,0.6); }
 
-    .photo-wrap {
+.photo-wrap {
       margin-bottom: 12px;
       margin-top: 8px;
       width: 94%;
@@ -375,6 +374,7 @@
     <span class="lightbox-close" id="lightboxClose">&times;</span>
     <img id="lightboxImg" src="" alt="" />
     <div class="lightbox-caption" id="lightboxCaption"></div>
+    <button class="lightbox-delete" id="lightboxDelete">delete photo</button>
   </div>
 
   <script>
@@ -427,7 +427,6 @@
             return `<div class="photo-wrap" style="transform: rotate(${rot}deg)" data-caption="${(p.caption || '').replace(/"/g, '&quot;')}" data-key="${p.key}">
               <img src="/photo/${p.key}" loading="lazy" alt="Memory of Kris" />
               ${p.caption ? `<div class="photo-caption">${p.caption}</div>` : ''}
-              <button class="photo-delete" data-key="${p.key}">delete</button>
             </div>`;
           }).join('')}
         </div>
@@ -436,20 +435,11 @@
         wrap.addEventListener('click', () => {
           lightboxImg.src = wrap.querySelector('img').src;
           lightboxCaption.textContent = wrap.dataset.caption || '';
+          lightboxKey = wrap.dataset.key;
           lightbox.classList.add('open');
         });
       });
 
-      gallery.querySelectorAll('.photo-delete').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (confirm('This will permanently delete this photo for everyone. Are you sure?')) {
-            fetch(`/delete?key=${encodeURIComponent(btn.dataset.key)}`, { method: 'DELETE' })
-              .then(() => loadPhotos())
-              .catch(() => alert('Something went wrong. Please try again.'));
-          }
-        });
-      });
     }
 
     // File selection
@@ -550,8 +540,16 @@
     }
 
     // Lightbox
+    let lightboxKey = null;
     document.getElementById('lightboxClose').addEventListener('click', () => lightbox.classList.remove('open'));
     lightbox.addEventListener('click', (e) => { if (e.target === lightbox) lightbox.classList.remove('open'); });
+    document.getElementById('lightboxDelete').addEventListener('click', () => {
+      if (confirm('This will permanently delete this photo for everyone. Are you sure?')) {
+        fetch(`/delete?key=${encodeURIComponent(lightboxKey)}`, { method: 'DELETE' })
+          .then(() => { lightbox.classList.remove('open'); loadPhotos(); })
+          .catch(() => alert('Something went wrong. Please try again.'));
+      }
+    });
   </script>
 
 </body>
