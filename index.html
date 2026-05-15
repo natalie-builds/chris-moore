@@ -407,9 +407,8 @@
       for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) & 0xffffffff;
       const magnitude = ((h >>> 0) % 500) / 100 + 1.5; // 1.5–6.4 degrees
       const col = idx % 5;
-      // Sign is column-only: guaranteed adjacent columns always alternate direction.
-      // Magnitude varies per photo via hash so each tilt looks unique.
-      const sign = col % 2 === 0 ? -1 : 1;
+      const row = Math.floor(idx / 5);
+      const sign = (col + row) % 2 === 0 ? -1 : 1;
       return (sign * magnitude).toFixed(2);
     }
 
