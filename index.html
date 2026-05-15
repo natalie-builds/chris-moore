@@ -15,51 +15,43 @@
     }
 
     header {
-      padding: 28px 32px;
-      border-bottom: 1px solid #e5ddd4;
-    }
-
-    .header-inner {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      max-width: 620px;
-      margin: 0 auto;
+      text-align: center;
+      padding: 48px 24px 40px;
     }
 
     .celebrating {
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: #a09080;
-      margin-bottom: 8px;
+      margin-bottom: 20px;
       font-style: normal;
     }
 
     .portrait {
-      width: 130px;
-      height: 165px;
-      border-radius: 10px;
+      width: 220px;
+      height: 280px;
+      border-radius: 12px;
       object-fit: cover;
       object-position: center 10%;
-      flex-shrink: 0;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      margin-bottom: 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
     }
 
-    .header-text { text-align: left; }
-
     header h1 {
-      font-size: 1.9rem;
+      font-size: 2.2rem;
       font-weight: normal;
       letter-spacing: 0.02em;
       color: #1a150f;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     header p {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: #8a7968;
       font-style: italic;
+      max-width: 480px;
+      margin: 0 auto;
       line-height: 1.7;
     }
 
@@ -204,7 +196,7 @@
 
     /* Gallery */
     .gallery-section {
-      padding: 28px 8px 60px;
+      padding: 28px 16px 60px;
     }
 
     .gallery-section h2 {
@@ -322,14 +314,10 @@
 <body>
 
   <header>
-    <div class="header-inner">
-      <img class="portrait" src="chris.png" alt="Chris Moore" />
-      <div class="header-text">
-        <p class="celebrating">Celebrating the life of</p>
-        <h1>Chris Moore</h1>
-        <p style="white-space: nowrap;">Share your memories of Chris — every picture is a gift to the family.</p>
-      </div>
-    </div>
+    <p class="celebrating">Celebrating the life of</p>
+    <img class="portrait" src="chris.png" alt="Chris Moore" />
+    <h1>Chris Moore</h1>
+    <p>Share your memories of Chris — every picture is a gift to the family.</p>
   </header>
 
   <div class="upload-section">
@@ -387,7 +375,7 @@
     function keyRotation(key) {
       let h = 0;
       for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) & 0xffffffff;
-      return (((h >>> 0) % 1400) / 100 - 7).toFixed(2);
+      return (((h >>> 0) % 1200) / 100 - 6).toFixed(2);
     }
 
     function renderGallery(photos) {
