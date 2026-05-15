@@ -361,6 +361,12 @@
       } catch (e) {}
     }
 
+    function keyRotation(key) {
+      let h = 0;
+      for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) & 0xffffffff;
+      return (((h >>> 0) % 1400) / 100 - 7).toFixed(2);
+    }
+
     function renderGallery(photos) {
       if (!photos.length) {
         gallery.innerHTML = '<div class="empty">Photos shared by family and friends will appear here.</div>';
@@ -371,7 +377,7 @@
       gallery.innerHTML = cols.map(colPhotos => `
         <div class="gallery-col">
           ${colPhotos.map(p => {
-            const rot = (Math.random() * 14 - 7).toFixed(2);
+            const rot = keyRotation(p.key);
             return `<div class="photo-wrap" style="transform: rotate(${rot}deg)" data-caption="${(p.caption || '').replace(/"/g, '&quot;')}">
               <img src="/photo/${p.key}" loading="lazy" alt="Memory of Chris" />
               ${p.caption ? `<div class="photo-caption">${p.caption}</div>` : ''}
