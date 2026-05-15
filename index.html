@@ -80,8 +80,9 @@
       border: 1.5px dashed #c8b89a;
       border-radius: 10px;
       padding: 10px 24px 12px;
-      max-width: 380px;
+      width: min(380px, 100%);
       margin: 2px auto 0;
+      box-sizing: border-box;
     }
 
     .upload-area input[type="file"] { display: none; }
@@ -95,6 +96,8 @@
       color: #6a5d50;
       line-height: 1.55;
       text-align: center;
+      width: 100%;
+      word-break: break-word;
     }
 
     .upload-btn {
@@ -115,8 +118,11 @@
 
     /* Pending photos list */
     .pending-list {
+      width: 100%;
       max-width: 520px;
       margin: 16px auto 0;
+      box-sizing: border-box;
+      padding: 0 4px;
     }
 
     .pending-item {
@@ -126,6 +132,8 @@
       padding: 10px 0;
       border-bottom: 1px solid #ede8e0;
       text-align: left;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .pending-thumb {
