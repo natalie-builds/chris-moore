@@ -499,7 +499,6 @@
       const n = pendingFiles.length;
       selectionMsg.textContent = `${n} photo${n > 1 ? 's' : ''} selected — add captions below, then tap Upload.`;
       gallerySection.classList.add('dimmed');
-      const n = pendingFiles.length;
       pendingList.innerHTML = pendingFiles.map((item, i) => `
         <div class="pending-item">
           <img class="pending-thumb" src="${item.url}" alt="" />
