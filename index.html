@@ -39,7 +39,7 @@
     }
 
     header h1 {
-      font-size: clamp(1.1rem, 5.5vw, 2.6rem);
+      font-size: clamp(1.4rem, 7.5vw, 2.6rem);
       font-weight: normal;
       letter-spacing: 0.04em;
       color: #1a150f;
@@ -231,6 +231,7 @@
       overflow: visible;
     }
 
+    @media (max-width: 480px) { header { padding-left: 8px; padding-right: 8px; } }
     @media (max-width: 700px) { .gallery { flex-wrap: wrap; } .gallery-col { min-width: 45%; } }
     @media (max-width: 460px) { .gallery-col { min-width: 100%; } }
 
