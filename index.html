@@ -361,6 +361,7 @@
       <div class="upload-text" id="uploadText"></div>
       <button class="upload-btn" id="uploadBtn" type="button">Select Photos</button>
     </div>
+    <div id="pendingHeader" style="display:none; font-size:0.75rem; font-weight:normal; color:#8a7968; letter-spacing:0.08em; text-transform:uppercase; text-align:center; margin-top:16px; margin-bottom:4px;">Selected Photos</div>
     <div class="pending-list" id="pendingList"></div>
     <div id="submitRow" style="display:none; margin-top:14px;">
       <button class="caption-submit" id="submitBtn">Upload</button>
@@ -477,15 +478,18 @@
     document.getElementById('uploadText').textContent = uploadTextDefault;
 
     const gallerySection = document.querySelector('.gallery-section');
+    const pendingHeader = document.getElementById('pendingHeader');
 
     function renderPendingList() {
       if (!pendingFiles.length) {
         pendingList.innerHTML = '';
         submitRow.style.display = 'none';
+        pendingHeader.style.display = 'none';
         uploadText.textContent = uploadTextDefault;
         gallerySection.classList.remove('dimmed');
         return;
       }
+      pendingHeader.style.display = 'block';
       gallerySection.classList.add('dimmed');
       const n = pendingFiles.length;
       uploadText.textContent = `${n} photo${n > 1 ? 's' : ''} selected — add captions below, then tap Upload.`;
@@ -541,6 +545,7 @@
         pendingList.innerHTML = '';
         fileInput.value = '';
         submitRow.style.display = 'none';
+        pendingHeader.style.display = 'none';
         uploadText.textContent = uploadTextDefault;
         gallerySection.classList.remove('dimmed');
         status.textContent = `${total} photo${total > 1 ? 's' : ''} uploaded. Thank you.`;
