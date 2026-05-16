@@ -361,7 +361,10 @@
       <div class="upload-text" id="uploadText"></div>
       <button class="upload-btn" id="uploadBtn" type="button">Select Photos</button>
     </div>
-    <div id="pendingHeader" style="display:none; font-size:0.85rem; font-weight:normal; color:#8a7968; letter-spacing:0.08em; text-transform:uppercase; text-align:center; margin-top:40px; margin-bottom:-6px;">Selected Photos</div>
+    <div id="pendingHeader" style="display:none; text-align:center; margin-top:28px; margin-bottom:4px;">
+      <div style="font-size:0.85rem; font-weight:normal; color:#8a7968; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px;">Selected Photos</div>
+      <div id="selectionMsg" style="font-size:0.82rem; color:#8a7968; font-style:italic;"></div>
+    </div>
     <div class="pending-list" id="pendingList"></div>
     <div id="submitRow" style="display:none; margin-top:14px;">
       <button class="caption-submit" id="submitBtn">Upload</button>
@@ -479,20 +482,25 @@
 
     const gallerySection = document.querySelector('.gallery-section');
     const pendingHeader = document.getElementById('pendingHeader');
+    const selectionMsg = document.getElementById('selectionMsg');
+    const dropzone = document.getElementById('dropzone');
 
     function renderPendingList() {
       if (!pendingFiles.length) {
         pendingList.innerHTML = '';
         submitRow.style.display = 'none';
         pendingHeader.style.display = 'none';
+        dropzone.style.display = '';
         uploadText.textContent = uploadTextDefault;
         gallerySection.classList.remove('dimmed');
         return;
       }
+      dropzone.style.display = 'none';
       pendingHeader.style.display = 'block';
+      const n = pendingFiles.length;
+      selectionMsg.textContent = `${n} photo${n > 1 ? 's' : ''} selected — add captions below, then tap Upload.`;
       gallerySection.classList.add('dimmed');
       const n = pendingFiles.length;
-      uploadText.textContent = `${n} photo${n > 1 ? 's' : ''} selected — add captions below, then tap Upload.`;
       pendingList.innerHTML = pendingFiles.map((item, i) => `
         <div class="pending-item">
           <img class="pending-thumb" src="${item.url}" alt="" />
@@ -546,6 +554,7 @@
         fileInput.value = '';
         submitRow.style.display = 'none';
         pendingHeader.style.display = 'none';
+        dropzone.style.display = '';
         uploadText.textContent = uploadTextDefault;
         gallerySection.classList.remove('dimmed');
         status.textContent = `${total} photo${total > 1 ? 's' : ''} uploaded. Thank you.`;
