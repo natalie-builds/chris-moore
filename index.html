@@ -362,8 +362,8 @@
       <button class="upload-btn" id="uploadBtn" type="button">Select Photos</button>
     </div>
     <div id="pendingHeader" style="display:none; text-align:center; margin-top:28px; margin-bottom:4px;">
-      <div style="font-size:0.85rem; font-weight:normal; color:#8a7968; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px;">Selected Photos</div>
-      <div id="selectionMsg" style="font-size:0.82rem; color:#8a7968; font-style:italic;"></div>
+      <div id="pendingHeaderText" style="font-size:0.85rem; font-weight:normal; color:#8a7968; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px;">Selected Photos</div>
+      <div id="selectionMsg" style="font-size:0.82rem; color:#8a7968; font-style:italic;">Add captions below, then tap Upload.</div>
     </div>
     <div class="pending-list" id="pendingList"></div>
     <div id="submitRow" style="display:none; margin-top:14px;">
@@ -482,6 +482,7 @@
 
     const gallerySection = document.querySelector('.gallery-section');
     const pendingHeader = document.getElementById('pendingHeader');
+    const pendingHeaderText = document.getElementById('pendingHeaderText');
     const selectionMsg = document.getElementById('selectionMsg');
 
     function renderPendingList() {
@@ -497,7 +498,7 @@
       dropzone.style.display = 'none';
       pendingHeader.style.display = 'block';
       const n = pendingFiles.length;
-      selectionMsg.textContent = `${n} photo${n > 1 ? 's' : ''} selected — add captions below, then tap Upload.`;
+      pendingHeaderText.textContent = `Selected Photos (${n})`;
       gallerySection.classList.add('dimmed');
       pendingList.innerHTML = pendingFiles.map((item, i) => `
         <div class="pending-item">
@@ -528,7 +529,7 @@
 
       submitBtn.disabled = false;
       submitRow.style.display = 'block';
-      setTimeout(() => pendingHeader.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
+      setTimeout(() => pendingHeader.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
     }
 
     // Submit upload
