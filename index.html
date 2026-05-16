@@ -490,12 +490,10 @@
         pendingList.innerHTML = '';
         submitRow.style.display = 'none';
         pendingHeader.style.display = 'none';
-        dropzone.style.display = '';
         uploadText.textContent = uploadTextDefault;
         gallerySection.classList.remove('dimmed');
         return;
       }
-      dropzone.style.display = 'none';
       pendingHeader.style.display = 'block';
       const n = pendingFiles.length;
       pendingHeaderText.textContent = `Selected Photos (${n})`;
@@ -553,7 +551,6 @@
         fileInput.value = '';
         submitRow.style.display = 'none';
         pendingHeader.style.display = 'none';
-        dropzone.style.display = '';
         uploadText.textContent = uploadTextDefault;
         gallerySection.classList.remove('dimmed');
         status.textContent = `${total} photo${total > 1 ? 's' : ''} uploaded. Thank you.`;
