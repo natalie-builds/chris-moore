@@ -130,8 +130,8 @@
     }
 
     .pending-thumb {
-      width: 56px;
-      height: 56px;
+      width: 80px;
+      height: 80px;
       object-fit: cover;
       border-radius: 4px;
       flex-shrink: 0;
@@ -179,19 +179,21 @@
     .pending-remove:hover { color: #8a7968; }
 
     .caption-submit {
-      background: #5a4a38;
-      color: #f8f5f0;
+      background: #3a7d44;
+      color: #fff;
       border: none;
-      padding: 9px 24px;
+      padding: 11px 48px;
       border-radius: 6px;
       font-family: Georgia, serif;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       cursor: pointer;
       transition: background 0.2s;
     }
 
-    .caption-submit:hover { background: #3d3125; }
+    .caption-submit:hover { background: #2d6235; }
     .caption-submit:disabled { background: #c8b89a; cursor: not-allowed; }
+
+    .gallery-section.dimmed { opacity: 0.25; pointer-events: none; transition: opacity 0.3s; }
 
     .status {
       margin-top: 14px;
@@ -474,13 +476,17 @@
       : 'Click to choose photos, or drag and drop. Add captions.';
     document.getElementById('uploadText').textContent = uploadTextDefault;
 
+    const gallerySection = document.querySelector('.gallery-section');
+
     function renderPendingList() {
       if (!pendingFiles.length) {
         pendingList.innerHTML = '';
         submitRow.style.display = 'none';
         uploadText.textContent = uploadTextDefault;
+        gallerySection.classList.remove('dimmed');
         return;
       }
+      gallerySection.classList.add('dimmed');
       const n = pendingFiles.length;
       uploadText.textContent = `${n} photo${n > 1 ? 's' : ''} selected — add captions below, then tap Upload.`;
       pendingList.innerHTML = pendingFiles.map((item, i) => `
@@ -536,6 +542,7 @@
         fileInput.value = '';
         submitRow.style.display = 'none';
         uploadText.textContent = uploadTextDefault;
+        gallerySection.classList.remove('dimmed');
         status.textContent = `${total} photo${total > 1 ? 's' : ''} uploaded. Thank you.`;
         loadPhotos();
       } catch (e) {
