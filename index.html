@@ -356,7 +356,7 @@
           <polyline points="21 15 16 10 5 21"/>
         </svg>
       </div>
-      <div class="upload-text" id="uploadText">Click to choose photos, or drag and drop. Add captions.</div>
+      <div class="upload-text" id="uploadText"></div>
       <button class="upload-btn" id="uploadBtn" type="button">Choose Photos</button>
     </div>
     <div class="pending-list" id="pendingList"></div>
@@ -472,6 +472,7 @@
     const uploadTextDefault = window.innerWidth <= 480
       ? 'Tap to choose photos. Add captions.'
       : 'Click to choose photos, or drag and drop. Add captions.';
+    document.getElementById('uploadText').textContent = uploadTextDefault;
 
     function renderPendingList() {
       if (!pendingFiles.length) {
