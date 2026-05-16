@@ -231,7 +231,7 @@
       overflow: visible;
     }
 
-    @media (max-width: 480px) { header { padding-left: 8px; padding-right: 8px; } }
+    @media (max-width: 480px) { header { padding-left: 8px; padding-right: 8px; } .upload-area { padding-top: 6px; padding-bottom: 6px; } }
     @media (max-width: 700px) { .gallery { flex-wrap: wrap; } .gallery-col { min-width: 45%; } }
     @media (max-width: 460px) { .gallery-col { min-width: 100%; } }
 
@@ -469,7 +469,9 @@
     });
 
     const uploadText = document.getElementById('uploadText');
-    const uploadTextDefault = 'Click to choose photos, or drag and drop. Add captions.';
+    const uploadTextDefault = window.innerWidth <= 480
+      ? 'Tap to choose photos. Add captions.'
+      : 'Click to choose photos, or drag and drop. Add captions.';
 
     function renderPendingList() {
       if (!pendingFiles.length) {
